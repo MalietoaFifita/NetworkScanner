@@ -3,6 +3,7 @@ import subprocess
 def main():
     print("====Simple Network Scanner====")
     print("This program will scan a range of IP's")
+    print("The IP's must be in the same network, with the starting IP smaller than the ending IP.")
     #variables to hold the ip's that we will be scanning
     start_ip = input("Enter the start ip: ")
         
@@ -21,6 +22,16 @@ def main():
     #split the ip's into 4 parts and extract the last number for the range values
     start_parts = start_ip.split(".")
     end_parts = end_ip.split(".")
+
+    #validation check to make sure ip's are in the same network
+    if start_parts[:3] != end_parts:
+        print("Sorry, your IP's are not in the same network")
+        return
+    
+    #validation check to make sure last octets are in order
+    if start_parts[3] > end_parts[3]:
+        print("Sorry that is not a valid IP")
+        return
 
     #extract the base of the ip's, should be the same for both
     base = ".".join(start_parts[:3]) + "."
