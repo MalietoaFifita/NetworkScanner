@@ -1,61 +1,95 @@
 import subprocess
 
 def main():
+    #intro for user
     print("====Simple Network Scanner====")
     print("This program will scan a range of IP's")
     print("The IP's must be in the same network, with the starting IP smaller than the ending IP.")
-    #variables to hold the ip's that we will be scanning
-    start_ip = input("Enter the start ip: ")
-        
-    # validation check
-    if not valid_ip(start_ip):
-        print("That is not a valid ip")
-        return
 
-    end_ip = input("Enter the ending ip: ")
+    #while loop to keep scanning if user chooses
+    while True:
+        one_scan()
 
-    #validation check
-    if not valid_ip(end_ip):
+        #ask user if they want to scan another range, add validation for this later
+        scan_again = input("Do you want to scan again? y/n: ").lower()
+
+        if scan_again == "n":
+            break
+
+
+    
+
+def one_scan():
+    #Loop to keep trying to validate the IP
+    while True:
+        #variables to hold the ip's that we will be scanning
+        start_ip = input("Enter the start ip: ")
+        # validation check
+        if valid_ip(start_ip):
+            break
         print("That is not a valid ip")
-        return
+
+    #Same loop to keep trying to validate the IP
+    while True:
+        end_ip = input("Enter the ending ip: ")
+        #validation check
+        if valid_ip(end_ip):
+            break
+        print("That is not a valid ip")
     
     #split the ip's into 4 parts and extract the last number for the range values
     start_parts = start_ip.split(".")
     end_parts = end_ip.split(".")
 
     #validation check to make sure ip's are in the same network
-    if start_parts[:3] != end_parts:
+    if start_parts[:3] != end_parts[:3]:
         print("Sorry, your IP's are not in the same network")
         return
     
-    #validation check to make sure last octets are in order
-    if start_parts[3] > end_parts[3]:
-        print("Sorry that is not a valid IP")
+    #validation check to make sure last octets are in order, need to convert to int in order to compare
+    if int(start_parts[3]) > int(end_parts[3]):
+        print("Sorry that is not a valid IP range")
         return
 
-    #extract the base of the ip's, should be the same for both
+    #put together the base of the ip's, should be the same for both
     base = ".".join(start_parts[:3]) + "."
     
     #get starting and ending integers of the range of ips
     start_range = int(start_parts[3])
     end_range = int(end_parts[3])
 
+    #hosts variables to use in output
+    hosts_up = 0
+    hosts_down = 0
+
+    #for range loop to loop through the range of IP's
     for i in range(start_range, end_range + 1):
         ip = base + str(i)
-        scan_ip(ip)
+        if scan_ip(ip):
+            #add 1 to hosts_up if it is up
+            hosts_up += 1
+        else:
+            #add 1 to hosts_down if it is down
+            hosts_down += 1
+    
+    print("Scan Complete.")
+    print(f"Hosts up: {hosts_up}")
+    print(f"Hosts down: {hosts_down}")
+
 
 
 def scan_ip(ip):
-    print(f"Scanning {ip}")
     #Scanning logic
     command = ["ping", "-n", "1", ip ]
     result = subprocess.run(command, capture_output=True , text=True)
     
-    #if result return code = 0, then success if not then failure
+    #if result return code = 0, means success so return true. if not, then return failure.
     if result.returncode == 0:
-        print(f"Host {ip} is up")
+        print(f"[+] {ip} is up")
+        return True
     else:
-        print(f"Host {ip} is down")
+        print(f"[-] {ip} is down")
+        return False
 
 def valid_ip(ip):
     parts = ip.split(".")
