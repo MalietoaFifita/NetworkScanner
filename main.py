@@ -1,4 +1,9 @@
+#subprocess module to run ping command
 import subprocess
+#socket module to run a hostname lookup
+import socket
+#time module to keep track of how long the scan takes
+import time
 
 def main():
     #intro for user
@@ -8,10 +13,27 @@ def main():
 
     #while loop to keep scanning if user chooses
     while True:
+
+        #starting time of the scan
+        start_time = time.time()
+
         one_scan()
 
-        #ask user if they want to scan another range, add validation for this later
-        scan_again = input("Do you want to scan again? y/n: ").lower()
+        #ending time of the scan
+        end_time = time.time()
+
+        duration = end_time - start_time
+        print(f"Scan completed in {duration:.2f} seconds")
+
+        #Validation loop to ask user if they want to scan again
+        while True:
+            #ask user if they want to scan another range
+            scan_again = input("Do you want to scan again? y/n: ").lower()
+
+            if scan_again in ("y", "n"):
+                break
+            
+            print("Please enter 'y' or 'n'")
 
         if scan_again == "n":
             break
@@ -85,7 +107,13 @@ def scan_ip(ip):
     
     #if result return code = 0, means success so return true. if not, then return failure.
     if result.returncode == 0:
-        print(f"[+] {ip} is up")
+        try:
+            #look for a hostname
+            host_name = socket.gethostbyaddr(ip)[0]
+        except:
+            host_name = "Unknown"
+
+        print(f"[+] {ip} ({host_name}) is up")
         return True
     else:
         print(f"[-] {ip} is down")
