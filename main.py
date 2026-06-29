@@ -4,6 +4,11 @@ import subprocess
 import socket
 #time module to keep track of how long the scan takes
 import time
+#ANSI color codes for color output in terminal
+GREEN = "\033[92m"
+RED = "\033[91m"
+YELLOW = "\033[93m"
+RESET = "\033[0m"
 
 def main():
     #intro for user
@@ -23,7 +28,7 @@ def main():
         end_time = time.time()
 
         duration = end_time - start_time
-        print(f"Scan completed in {duration:.2f} seconds")
+        print(f"{GREEN}Scan completed in {duration:.2f} seconds{RESET}")
 
         #Validation loop to ask user if they want to scan again
         while True:
@@ -33,7 +38,7 @@ def main():
             if scan_again in ("y", "n"):
                 break
             
-            print("Please enter 'y' or 'n'")
+            print(f"{YELLOW}Please enter 'y' or 'n'{RESET}")
 
         if scan_again == "n":
             break
@@ -49,7 +54,7 @@ def one_scan():
         # validation check
         if valid_ip(start_ip):
             break
-        print("That is not a valid ip")
+        print(f"{YELLOW}That is not a valid ip{RESET}")
 
     #Same loop to keep trying to validate the IP
     while True:
@@ -57,7 +62,7 @@ def one_scan():
         #validation check
         if valid_ip(end_ip):
             break
-        print("That is not a valid ip")
+        print(f"{YELLOW}That is not a valid ip{RESET}")
     
     #split the ip's into 4 parts and extract the last number for the range values
     start_parts = start_ip.split(".")
@@ -65,12 +70,12 @@ def one_scan():
 
     #validation check to make sure ip's are in the same network
     if start_parts[:3] != end_parts[:3]:
-        print("Sorry, your IP's are not in the same network")
+        print(f"{YELLOW}Sorry, your IP's are not in the same network{RESET}")
         return
     
     #validation check to make sure last octets are in order, need to convert to int in order to compare
     if int(start_parts[3]) > int(end_parts[3]):
-        print("Sorry that is not a valid IP range")
+        print(f"{YELLOW}Sorry that is not a valid IP range{RESET}")
         return
 
     #put together the base of the ip's, should be the same for both
@@ -95,8 +100,8 @@ def one_scan():
             hosts_down += 1
     
     print("Scan Complete.")
-    print(f"Hosts up: {hosts_up}")
-    print(f"Hosts down: {hosts_down}")
+    print(f"{GREEN}Hosts up: {hosts_up}{RESET}")
+    print(f"{RED}Hosts down: {hosts_down}{RESET}")
 
 
 
@@ -113,10 +118,10 @@ def scan_ip(ip):
         except:
             host_name = "Unknown"
 
-        print(f"[+] {ip} ({host_name}) is up")
+        print(f"{GREEN}[+] {ip} ({host_name}) is up{RESET}")
         return True
     else:
-        print(f"[-] {ip} is down")
+        print(f"{RED}[-] {ip} is down{RESET}")
         return False
 
 def valid_ip(ip):
