@@ -16,6 +16,18 @@ YELLOW = "\033[93m"
 RESET = "\033[0m"
 
 def valid_ip(ip):
+    """
+    Validates whether a string is a properly formatted IPv4 address.
+
+    Checks:
+    - The address contains exactly four octets
+    - Each octet is numeric (no letters or special characters)
+    - Each octet is within the valid range of 0–255
+
+    Returns:
+    - True if the IP address is valid
+    - False otherwise
+    """
     parts = ip.split(".")
 
     #checks is ip is 4 parts, if not return false

@@ -15,13 +15,27 @@ The functions here focus solely on scanning behavior and output formatting.
 
 #subprocess module to run ping command
 import subprocess
+
 #socket module to run a hostname lookup
 import socket
 
-#import valid ip and ANSI escape colors since it calls it
+#import valid ip and ANSI escape colors from utils since it calls it
 from utils import valid_ip, GREEN, RED, YELLOW, RESET
 
-def one_scan():
+def scan_range():
+    """
+   Performs a full scan across a user-defined IP range.
+
+    Steps:
+    - Prompt the user for a starting and ending IP address, validating both
+    - Ensure both IPs belong to the same /24 network (first three octets match)
+    - Ensure the starting IP's last octet is less than or equal to the ending IP's
+    - Construct the base network prefix from the first three octets
+    - Loop through the range of host addresses and scan each using scan_ip()
+    - Print a summary showing how many hosts were up or down
+
+    This function handles all validation and iteration logic for a single scan.
+    """
     #Loop to keep trying to validate the IP
     while True:
         #variables to hold the ip's that we will be scanning
@@ -81,6 +95,21 @@ def one_scan():
 
 
 def scan_ip(ip):
+    """
+    Scans a single IP address using the system ping command.
+
+    Steps:
+    - Build a ping command that sends one packet for efficiency
+    - Execute the command using subprocess and capture the output
+    - If the ping succeeds, attempt reverse DNS lookup for a hostname
+    - Print a formatted message indicating whether the host is up or down
+
+    Returns:
+    - True if the host responds to ping
+    - False if the host is unreachable
+
+    """
+
     #Scanning logic
     command = ["ping", "-n", "1", ip ]
     result = subprocess.run(command, capture_output=True , text=True)

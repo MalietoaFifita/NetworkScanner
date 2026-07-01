@@ -15,12 +15,23 @@ All scanning logic is delegated to scanner.py, and shared utilities
 import time
 
 #import functions from scanner.py file
-from scanner import one_scan
+from scanner import scan_range
 
 #import functions and ANSI escape codes from utils.py
 from utils import valid_ip, GREEN, RED, YELLOW, RESET
 
 def main():
+    """
+    Runs the main program loop for the Simple Network Scanner.
+
+    Responsibilities:
+    - Display introductory information to the user
+    - Record the start and end time of each scan to calculate duration
+    - Call scan_range() to perform the actual network scan
+    - Prompt the user to run another scan, validating input ('y' or 'n')
+
+    This function controls overall program flow and user interaction.
+    """
     #intro for user
     print("====Simple Network Scanner====")
     print("This program will scan a range of IP's")
@@ -32,7 +43,7 @@ def main():
         #starting time of the scan
         start_time = time.time()
 
-        one_scan()
+        scan_range()
 
         #ending time of the scan
         end_time = time.time()
