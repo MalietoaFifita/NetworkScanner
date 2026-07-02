@@ -24,7 +24,7 @@ from utils import valid_ip, GREEN, RED, YELLOW, RESET
 
 def scan_range():
     """
-   Performs a full scan across a user-defined IP range.
+    Performs a full scan across a user-defined IP range.
 
     Steps:
     - Prompt the user for a starting and ending IP address, validating both
@@ -59,7 +59,7 @@ def scan_range():
 
     #validation check to make sure ip's are in the same network
     if start_parts[:3] != end_parts[:3]:
-        print(f"{YELLOW}Sorry, your IP's are not in the same network{RESET}")
+        print(f"{YELLOW}Invalid range: both IPs must be in the same /24 network (first three octets must match).{RESET}")
         return
     
     #validation check to make sure last octets are in order, need to convert to int in order to compare
@@ -88,7 +88,9 @@ def scan_range():
             #add 1 to hosts_down if it is down
             hosts_down += 1
     
-    print("Scan Complete.")
+    print("================================")
+    print("||         SCAN COMPLETE      ||")
+    print("================================")
     print(f"{GREEN}Hosts up: {hosts_up}{RESET}")
     print(f"{RED}Hosts down: {hosts_down}{RESET}")
 
