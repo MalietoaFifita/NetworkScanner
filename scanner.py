@@ -16,6 +16,9 @@ The functions here focus solely on scanning behavior and output formatting.
 #subprocess module to run ping command
 import subprocess
 
+#import time module to track time of scan
+import time
+
 #socket module to run a hostname lookup
 import socket
 
@@ -39,7 +42,7 @@ def scan_range():
     #Loop to keep trying to validate the IP
     while True:
         #variables to hold the ip's that we will be scanning
-        start_ip = input("Enter the start ip: ")
+        start_ip = input("Enter the start ip: ").strip()
         # validation check
         if valid_ip(start_ip):
             break
@@ -47,7 +50,7 @@ def scan_range():
 
     #Same loop to keep trying to validate the IP
     while True:
-        end_ip = input("Enter the ending ip: ")
+        end_ip = input("Enter the ending ip: ").strip()
         #validation check
         if valid_ip(end_ip):
             break
@@ -78,21 +81,55 @@ def scan_range():
     hosts_up = 0
     hosts_down = 0
 
+    #list of results to output to a file when needed
+    results = []
+
+    #starting time of the scan
+    start_time = time.time()
+
     #for range loop to loop through the range of IP's
     for i in range(start_range, end_range + 1):
         ip = base + str(i)
         if scan_ip(ip):
-            #add 1 to hosts_up if it is up
+            #add 1 to hosts_up if it is up, add to results
             hosts_up += 1
+            results.append(f"{ip} is up")
         else:
-            #add 1 to hosts_down if it is down
+            #add 1 to hosts_down if it is down, add to results
             hosts_down += 1
+            results.append(f"{ip} is down")
     
+    #ending time of the scan
+    end_time = time.time()
+
+    #get the duration of the scan
+    duration = end_time - start_time
+
+
     print("================================")
     print("||         SCAN COMPLETE      ||")
     print("================================")
+    print(f"{GREEN}Scan completed in {duration:.2f}{RESET} seconds")
     print(f"{GREEN}Hosts up: {hosts_up}{RESET}")
     print(f"{RED}Hosts down: {hosts_down}{RESET}")
+
+    #loop validation to ask user if they want to save to a file
+    while True:
+        save = input("Would you like to save the results to a file? y/n: ").lower()
+    
+        if save not in ["y", "n"]:
+            print("That is not a valid answer")
+
+        if save == "n":
+            break
+
+        if save == "y":
+            save_results(results)
+            break
+
+            
+
+
 
 
 
@@ -129,3 +166,19 @@ def scan_ip(ip):
     else:
         print(f"{RED}[-] {ip} is down{RESET}")
         return False
+
+def save_results(results):
+    """
+    Saves results to a file
+    """
+    
+    filename = "scan_results.txt"
+
+    #writing to the file
+    with open(filename, "w") as file:
+        file.write("Scan Results \n")
+        file.write("========================\n")
+        for line in results:
+            file.write(line + "\n")
+
+    print(f"{GREEN}Results saved to {filename}{RESET}")
