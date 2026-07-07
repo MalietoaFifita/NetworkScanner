@@ -109,7 +109,7 @@ def scan_range():
     print("================================")
     print("||         SCAN COMPLETE      ||")
     print("================================")
-    print(f"{GREEN}Scan completed in {duration:.2f}{RESET} seconds")
+    print(f"{GREEN}Scan completed in {duration:.2f} seconds{RESET}")
     print(f"{GREEN}Hosts up: {hosts_up}{RESET}")
     print(f"{RED}Hosts down: {hosts_down}{RESET}")
 
