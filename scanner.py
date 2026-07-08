@@ -46,7 +46,7 @@ def scan_range():
         # validation check
         if valid_ip(start_ip):
             break
-        print(f"{YELLOW}That is not a valid ip{RESET}")
+        print(f"{YELLOW}Invalid IP format. Please enter a valid IPv4 address. Ex: 192.168.1.10 {RESET}")
 
     #Same loop to keep trying to validate the IP
     while True:
@@ -54,7 +54,7 @@ def scan_range():
         #validation check
         if valid_ip(end_ip):
             break
-        print(f"{YELLOW}That is not a valid ip{RESET}")
+        print(f"{YELLOW}Invalid IP format. Please enter a valid IPv4 address. Ex: 192.168.1.10 {RESET}")
     
     #split the ip's into 4 parts and extract the last number for the range values
     start_parts = start_ip.split(".")
@@ -67,7 +67,7 @@ def scan_range():
     
     #validation check to make sure last octets are in order, need to convert to int in order to compare
     if int(start_parts[3]) > int(end_parts[3]):
-        print(f"{YELLOW}Sorry that is not a valid IP range{RESET}")
+        print(f"{YELLOW}Invalid Range: the starting IP must be less than or equal to the ending IP{RESET}")
         return
 
     #put together the base of the ip's, should be the same for both
