@@ -1,4 +1,5 @@
 NETWORK SCANNER - Network Scanning Tool
+Version 1.0 - July 2026
 
 Network Scanner is a command line Python-based network scanning tool via IPv4 addresses. It scans for IP addresses, sanitizes user input, and times how long the scan takes. It also has the functionality to save the results of the scan to a text file.
 
